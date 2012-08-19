@@ -210,6 +210,11 @@ for s in ipairs(states) do
 		sounds = default.node_sound_wood_defaults(),
 		walkable = true,
 		stack_max = 99,
+		pipelike = 0,
+		on_construct = function(pos)
+		local meta = minetest.env:get_meta(pos)
+		meta:set_int("pipelike",0)
+		end,
 		after_place_node = function(pos)
 			pipe_device_autorotate(pos, states[s], "pipeworks:valve_")
 			pipe_scanforobjects(pos)
@@ -228,12 +233,16 @@ for a in ipairs(axes) do
 	minetest.register_on_punchnode(function (pos, node)
 		if node.name=="pipeworks:valve_on_"..axes[a] then 
 			minetest.env:add_node(pos, { name = "pipeworks:valve_off_"..axes[a] })
+			local meta = minetest.env:get_meta(pos)
+			meta:set_int("pipelike",0)	
 		end
 	end)
 
 	minetest.register_on_punchnode(function (pos, node)
 		if node.name=="pipeworks:valve_off_"..axes[a] then 
 			minetest.env:add_node(pos, { name = "pipeworks:valve_on_"..axes[a] })
+			local meta = minetest.env:get_meta(pos)
+			meta:set_int("pipelike",1)	
 		end
 	end)
 
